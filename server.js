@@ -5,6 +5,7 @@ const io = require('socket.io')(server)
 const config = require('config')
 const cookieParser = require('cookie-parser')
 
+require('pretty-error').start()
 const PORT = config.get('port')
 const cookieMiddleware = require('./middleware/userCookie')
  
