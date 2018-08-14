@@ -1,9 +1,11 @@
 import React from 'react'
 
+import { Uploader } from './components'
+
 const App = () => {
   return (
     <div>
-      Hello
+      <Uploader />
     </div>
   )
 }

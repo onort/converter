@@ -30,7 +30,13 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: "babel-loader"
+        loader: "babel-loader",
+        options: {
+          presets: [
+            "stage-2",
+            "react",
+          ]
+        }
       },
       {
         test: /\.png$/,
