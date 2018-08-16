@@ -41,7 +41,7 @@ class Uploader extends Component {
 
   setConversionFormat  = e => {
     const selectedExtension = e.target.value
-    if(!selectedExtensionlength) {
+    if(!selectedExtension.length) {
       this.setState({ convert_ext: '' })
       return
     }
@@ -65,7 +65,7 @@ class Uploader extends Component {
       axios.post('/upload', data, {
         onUploadProgress: progressEvent => {
           let percentCompleted = Math.round(progressEvent.loaded * 100) / progressEvent.total
-          this.setState({ progress: percentCompleted })
+          this.setState({ progress: percentCompleted.toFixed(1) })
         }
       }).then(res => {
         let fileLoaded = res.data
@@ -77,6 +77,7 @@ class Uploader extends Component {
 
   render() {
     const { allowed_types, convert_ext, file, progress, upload_ext, uploading } = this.state
+    // console.log('State is', this.state)
     return (
       <div className="uploader">
         {!uploading ? 
@@ -90,7 +91,7 @@ class Uploader extends Component {
             </div>
             { file && 
               <div>
-                <select value={convert_ext} onChange={this.setConversionFormat}>
+                <select value={convert_ext ? convert_ext : ''} onChange={this.setConversionFormat}>
                   <option value="">Convert To</option>
                   {
                     allowed_types.map(ext => {
