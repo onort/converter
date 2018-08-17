@@ -4,11 +4,9 @@ const express = require('express')
 const fs = require('fs')
 const multer = require('multer')
 const path = require('path')
+const socket = require('socket.io')
 
-// require('pretty-error').start()
 const app = express()
-const server = require('http').Server(app)
-const io = require('socket.io')(server)
 const PORT = config.get('port')
 const cookieMiddleware = require('./middleware/userCookie')
  
@@ -75,4 +73,8 @@ const createUserEncodeDir = user => {
   })
 }
  
-server.listen(PORT, () => console.log('Server running on Port: '+ PORT))
+const server = app.listen(PORT, () => console.log('Server running on Port: '+ PORT))
+
+const io = socket(server)
+
+// io.sockets.on('')

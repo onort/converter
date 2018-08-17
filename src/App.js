@@ -10,10 +10,10 @@ console.log(`Uid is ${Cookie('_uid')}`)
 class App extends Component {
 
   initialState = {
-    encoder: false,
-    uploader: true,
-    file: '',
     convert_ext: '',
+    encoder: false,
+    file: '',
+    uploader: true,
   }
 
   state = this.initialState
@@ -27,14 +27,14 @@ class App extends Component {
   }
 
   render() {
-    const { uploader } = this.state
+    const { convert_ext, file, uploader } = this.state
     return (
       <div className="App">
         <Route exact path="/" render={props => (
           <div className="wrapper">
             { uploader ?
               <Uploader initEncoding={this.initEncoding} /> :
-              <Encoder />
+              <Encoder file={file} convert_ext={convert_ext} newEncode={this.clearEncode} /> 
             }
           </div>
         )}>
