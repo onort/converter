@@ -68,8 +68,9 @@ class Uploader extends Component {
           this.setState({ progress: percentCompleted.toFixed(1) })
         }
       }).then(res => {
+        console.log('upload file logs response data', res.data)
         let fileLoaded = res.data
-        if(fileLoaded.uploaded) this.props.initEncoding(fileLoaded.path, convert_ext)
+        if(fileLoaded.uploaded) this.props.initEncoding(fileLoaded.filename, convert_ext)
       }).catch(err => console.log('Error by loading data.', err))
     }
     else toastr.error('Error: Select a conversion format.')

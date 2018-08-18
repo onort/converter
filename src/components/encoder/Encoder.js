@@ -18,7 +18,7 @@ class Encoder extends Component {
 
   componentDidMount() {
     const { convert_ext, file } = this.state
-    this.socket = socketIOClient('ws://127.0.0.1:3000')
+    this.socket = socketIOClient('http://127.0.0.1:3000')
     this.socket.emit('encode', {
       file,
       user: Cookie('_uid'),
@@ -26,16 +26,16 @@ class Encoder extends Component {
     })
     this.socket.on('progress', data => {
       this.setState({ progress: data.percentage, eta: data.eta })
-    }).bind(this)
+    })
     this.socket.on('complete', data => {
       this.setState({ encoded_file: data.encoded_file })
       toastr.success('Encoding complete.')
-    }).bind(this)
+    })
   }
 
   componentWillUnmount() {
     this.socket.disconnect()
-    this.props.newEndoe()
+    this.props.newEncode()
   }
 
   render() {

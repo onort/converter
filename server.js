@@ -2,6 +2,7 @@ const config = require('config')
 const cookieParser = require('cookie-parser')
 const express = require('express')
 const fs = require('fs')
+const hbjs = require('handbrake-js')
 const multer = require('multer')
 const path = require('path')
 const socket = require('socket.io')
@@ -75,6 +76,34 @@ const createUserEncodeDir = user => {
  
 const server = app.listen(PORT, () => console.log('Server running on Port: '+ PORT))
 
+const deleteVideo = videoPath => {
+  fs.unlink(videoPath, err => {
+    if(err) throw err
+  })
+}
+
 const io = socket(server)
 
-// io.sockets.on('')
+io.sockets.on('connection', socket => {
+  socket.on('encode', data => {
+    const { convert_ext, file, user } = data
+    let completed = false
+    const input = path.join(__dirname, 'uploads', user, file)
+    const encoded_file = `${file}_to_.${convert_ext}`
+    const output = path.join(__dirname, 'encoded', user, encoded_file)
+    let handbrake = hbjs.spawn({ input, output, preset: 'Universal' })
+      .on('progress', progress => socket.emit('progress', { percentage: progress.percentComplete, eta: progress.eta }))
+      .on('complete', () => {
+        completed = true
+        socket.emit('complete', { encoded_file })
+      })
+    socket.on('disconnect', () => {
+      if(!completed) {
+        console.log('Not completed')
+        handbrake.cancel()
+        deleteVideo(input)
+        deleteVideo(output)
+      }
+    })
+  })
+})
